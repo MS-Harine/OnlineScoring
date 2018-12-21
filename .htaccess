@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/assets/css
+RewriteCond %{REQUEST_URI} !^/assets/js
+RewriteCond %{REQUEST_URI} !^/assets/img
+RewriteRule ^(.*)$ /index.php/$1 [L]

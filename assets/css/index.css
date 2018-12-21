@@ -1,0 +1,24 @@
+body { padding-top: 20px; }
+
+#head #logo img { width: 100px; }
+#head #setting span { float: right; }
+#head #setting span a { color: gray; }
+#head #setting span a:hover { color: black; }
+
+#content .mainbox { padding: 5px; overflow-y: hidden; }
+#content .mainbox_liner { border: 2px solid #000; border-radius: 4px; height: 75vh; overflow: hidden; }
+#content .mainbox #upload { border: 2px solid #000; border-radius: 4px; padding: 5px; height: 12vh; }
+#content .mainbox #result { border: 2px solid #000; border-radius: 4px; padding: 5px; height: 62vh; margin-top: 1vh;}
+#content .mainbox_title { background-color: #F6F8FA; padding: 5px; text-align: center; border-bottom: 2px solid #000; margin: 1px; }
+#content .mainbox_content { padding: 5px; overflow-x: hidden; }
+#content .mainbox_content .list { overflow-y: scroll; margin-right: -22px; }
+#content .mainbox_content .list ul { list-style-type: none; padding-left: 5px; line-height: 30px; }
+
+#group .mainbox_content a button { width: 100%; margin-top: 5px; }
+#group .list { height: 57vh; }
+
+#problem .list { height: 68vh; }
+
+#explain .mainbox_content { padding: 10px; height: 69vh; margin-right: -22px; }
+
+#control #result ol { line-height: 30px; padding-top: 20px;}
