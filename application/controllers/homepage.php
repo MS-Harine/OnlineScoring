@@ -20,6 +20,6 @@ class Homepage extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('index.html');
+		$this->load->view('index');
 	}
 }

@@ -88,7 +88,7 @@ switch (ENVIRONMENT)
 		echo 'The application environment is not set correctly.';
 		exit(1); // EXIT_ERROR
 }
-
+session_start();
 /*
  *---------------------------------------------------------------
  * SYSTEM DIRECTORY NAME

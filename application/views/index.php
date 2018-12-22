@@ -17,7 +17,14 @@
 				</div>
 				<div class="col">&nbsp;</div>
 				<div id="setting" class="col">
-					<span><a href="/">home</a> | <a href="/login">Login</a></span>
+					<span>
+						<?php
+						if ($this->session->userdata('is_login'))
+							echo "<a href='#'>".$this->session->userdata('nickname')."</a> | <a href='/auth/logout'>Logout</a>";
+						else
+							echo "<a href='/auth/signup'>Signup</a> | <a href='/auth/login'>Login</a>";
+						?>
+					</span>
 				</div>
 			</div>
 			<hr>
