@@ -37,7 +37,6 @@ class User_model extends CI_Model {
   }
 
   public function set_user($data) {
-    $this->load->library('encrypt');
     $password = hash("sha256", $data['password']);
     return $this->db->insert('profile', array(
       'email' => $data['email'],

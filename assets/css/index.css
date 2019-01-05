@@ -13,6 +13,7 @@ body { padding-top: 20px; }
 #content .mainbox_content { padding: 5px; overflow-x: hidden; }
 #content .mainbox_content .list { overflow-y: scroll; margin-right: -22px; }
 #content .mainbox_content .list ul { list-style-type: none; padding-left: 5px; line-height: 30px; }
+#content .mainbox_content .list ul li { cursor: pointer; }
 
 #group .mainbox_content a button { width: 100%; margin-top: 5px; }
 #group .list { height: 57vh; }

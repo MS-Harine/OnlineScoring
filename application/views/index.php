@@ -8,6 +8,8 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 		<link rel="stylesheet" href="assets/css/index.css">
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -45,23 +47,9 @@
 								<ul>
 									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 1</li>
 									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo group 2</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 3</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 4</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 5</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 6</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo group 7</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 8</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 9</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 10</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 11</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo group 12</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo group 13</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 14</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 15</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo group 16</li>
 								</ul>
 							</div>
-							<a href="/group/make"><button type="button" class="btn btn-outline-success">New Group</button></a>
+							<a href="/group/new"><button type="button" class="btn btn-outline-success">New Group</button></a>
 						</div>
 					</div>
 				</div>
@@ -133,4 +121,45 @@
 			</div>
 		</div>
 	</body>
+
+	<script>
+		$(document).ready(function() {
+			if ($("#setting > span > a:nth-child(2)").text() == "Logout") {
+				// Get group list when login
+				var group_list = 0;
+				$.ajax({
+					url: '/group',
+					type: 'post',
+					success: function(data) {
+						$("#group ul").html("");
+						for (var i = 0; i < data.length; i++) {
+							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>")
+							group_list = data;
+						}
+					}
+				});
+
+				// Search group list
+				$("#group .input-group button").click(function() {
+					$.ajax({
+						url: '/group/find?word=' + $("#group .input-group input")[0].value,
+						success: function(data) {
+							$("#group ul").html("");
+							for (var i = 0; i < data.length; i++)
+								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>")
+						}
+					})
+				});
+				
+				// Reset group list when erase all word in search input text
+				$("#group input").keyup(function() {
+					if ($(this).val() == "") {
+						$("#group ul").html("");
+						for (var i = 0; i < group_list.length; i++)
+							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + group_list[i].name + "</li>")
+					}
+				});
+			}
+		});
+	</script>
 </html>

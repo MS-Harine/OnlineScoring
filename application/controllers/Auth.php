@@ -30,7 +30,6 @@ class Auth extends CI_Controller {
           'is_login' => true
         );
         $this->session->set_userdata($data);
-        var_dump($this->session->all_userdata());
         redirect('/');
       }
     }
