@@ -29,10 +29,10 @@ class Group_model extends CI_Model {
       array_push($result, $q->result_array());
     }
 
-    return $result[0];
+    return !empty($result) ? $result[0] : NULL;
   }
 
-  public function join_group($email, $name, $maker) {
+  public function join_group($email, $name, $maker = False) {
     $query = $this->db->get_where('profile', array('email' => $email));
     $user = $query->result_array();
     if (empty($user))

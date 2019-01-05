@@ -126,15 +126,17 @@
 		$(document).ready(function() {
 			if ($("#setting > span > a:nth-child(2)").text() == "Logout") {
 				// Get group list when login
-				var group_list = 0;
+				var group_list = [];
 				$.ajax({
 					url: '/group',
 					type: 'post',
 					success: function(data) {
 						$("#group ul").html("");
-						for (var i = 0; i < data.length; i++) {
-							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>")
-							group_list = data;
+						if (data != null) {
+							for (var i = 0; i < data.length; i++) {
+								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>");
+								group_list = data;
+							}
 						}
 					}
 				});
@@ -146,9 +148,20 @@
 						success: function(data) {
 							$("#group ul").html("");
 							for (var i = 0; i < data.length; i++)
-								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>")
+								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>");
+							
+							// Event on
+							$("#group ul > li").on('click', function() {
+								$.ajax({
+									url: '/group/join?name=' + $(this).text().trim(),
+									type: 'get',
+									error: function(e) {
+										alert("Error on join group.");
+									}
+								})
+							});
 						}
-					})
+					});
 				});
 				
 				// Reset group list when erase all word in search input text
@@ -156,7 +169,9 @@
 					if ($(this).val() == "") {
 						$("#group ul").html("");
 						for (var i = 0; i < group_list.length; i++)
-							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + group_list[i].name + "</li>")
+							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + group_list[i].name + "</li>");
+
+						$("#group ul > li").off('click');
 					}
 				});
 			}

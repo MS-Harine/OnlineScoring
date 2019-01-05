@@ -43,4 +43,14 @@ class Group extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($result->result_array());
     }
+
+    public function join() {
+        if (!$this->session->userdata('is_login'))
+            redirect('/auth/login');
+        
+        $this->load->model('group_model');
+        $group = $this->input->get('name');
+        $this->group_model->join_group($this->session->userdata('email'), $group);
+        redirect('/');
+    }
 }
