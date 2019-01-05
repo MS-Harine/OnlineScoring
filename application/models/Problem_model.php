@@ -15,7 +15,7 @@ class Problem_model extends CI_Model {
         if ($group == NULL or $user == NULL)
             return false;
 
-        return $this->db->insert('group_member', array(
+        return $this->db->insert('problem', array(
             'group_id' => $group["id"],
             'profile_id' => $user["id"],
             'title' => $data['title'],

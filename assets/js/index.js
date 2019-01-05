@@ -18,14 +18,15 @@ function set_group() {
                     $(this).addClass('selected g_select');
 
                     if ($(this).children('span').hasClass('fa-crown')) {
-                        $("#problem .list").css('height', '62vh');
                         $("#problem .mainbox_content a button").show();
                     }
                     else {
-                        $("#problem .list").css('height', '68vh');
                         $("#problem .mainbox_content a button").hide();
                     }
                     set_problem();
+
+                    $("#explain .make_problem").hide();
+                    $("#explain .show_problem").show();
                 });
             }
         }
@@ -46,6 +47,9 @@ function search_group() {
                     $.ajax({
                         url: '/group/join?name=' + $(this).text().trim(),
                         type: 'get',
+                        success: function() {
+                            set_group();
+                        },
                         error: function(e) {
                             alert("Error on join group.");
                         }

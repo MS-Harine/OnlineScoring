@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="assets/css/index.css">
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="//cdn.ckeditor.com/4.11.1/basic/ckeditor.js"></script>
 		<script src="assets/js/index.js"></script>
 	</head>
 	<body>
@@ -88,7 +89,36 @@
 								<span>Explain</span>
 							</div>
 							<div class="mainbox_content">
-								Question content area
+								<form method="POST" id="q_form" enctype="multipart/form-data">
+									<div class="form-group">
+										<input type="text" class="form-control" name="title" placeholder="Enter title">
+									</div>
+									<div class="form-group">
+										<textarea name="content" id="q_content"></textarea>
+									</div>
+									<div class="form-check form-check-inline">
+										<input type="radio" class="form-check-input" name="level" value="1">
+										<label class="form-check-label">Very Easy</label>&nbsp;
+										<input type="radio" class="form-check-input" name="level" value="2">
+										<label class="form-check-label">Easy</label>&nbsp;
+										<input type="radio" class="form-check-input" name="level" value="3">
+										<label class="form-check-label">Normal</label>&nbsp;
+										<input type="radio" class="form-check-input" name="level" value="4">
+										<label class="form-check-label">Hard</label>&nbsp;
+										<input type="radio" class="form-check-input" name="level" value="5">
+										<label class="form-check-label">Very Hard</label>
+									</div>
+									<div class="form-group">
+										<label for="inputfile">Input file for test</label>
+										<input type="file" class="form-control-file" name="inputfiles[]" id="inputfile" multiple>
+									</div>
+									<div class="form-group">
+										<label for="outputfile">Output file for test</label>
+										<input type="file" class="form-control-file" name="outputfiles[]" id="outputfile" multiple>
+									</div>
+								</form>
+								<a href="#"><button type="button" class="btn btn-outline-success" id="submit">Submit</button></a>
+								<small class="text-muted">버튼을 누르면 작성한 내용이 초기화됩니다.</small>
 							</div>
 						</div>
 					</div>
@@ -138,6 +168,17 @@
 			});
 
 			$("#problem .mainbox_content a button").hide();
+			$("#problem .mainbox_content a button").click(function() {
+				$("#explain .show_problem").hide();
+				$("#explain .make_problem").show();
+			});
+
+			$("#submit").click(function() {
+				var url = "/problem/make/" + $(".g_select").text().trim().replace(/ /g, "_");
+				$("#q_form").attr("action", url);
+				$("#q_form").submit();
+			});
 		});
+		CKEDITOR.replace('q_content');
 	</script>
 </html>

@@ -16,11 +16,7 @@ body { padding-top: 20px; }
 #content .mainbox_content .list ul li { cursor: pointer; }
 #content .mainbox_content a button { width: 100%; margin-top: 5px; }
 
-#group .list { height: 57vh; }
-
-#problem .list { height: 68vh; }
-
-#explain .mainbox_content { padding: 10px; height: 69vh; margin-right: -22px; }
+#explain .mainbox_content { padding: 10px; height: 69vh; }
 #explain .make_problem { display: none; }
 
 #control #result ol { line-height: 30px; padding-top: 20px;}

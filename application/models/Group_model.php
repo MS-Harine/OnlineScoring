@@ -9,6 +9,7 @@ class Group_model extends CI_Model {
   }
 
   public function set_group($name, $email) {
+    $name = str_replace(' ', '_', $name);
     $this->db->insert('group', array(
       'name' => $name
     ));
@@ -43,6 +44,12 @@ class Group_model extends CI_Model {
     $user = $this->user_model->get_user($email);
     $group = $this->get_group($name);
     if ($user == NULL or $group == NULL)
+      return false;
+
+    if ($this->db->get_where('group_member', array(
+      'group_id' => $group['id'],
+      'profile_id' => $user['id']
+    ))->num_rows() != 0)
       return false;
 
     return $this->db->insert('group_member', array(

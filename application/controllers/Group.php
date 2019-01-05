@@ -44,6 +44,7 @@ class Group extends CI_Controller {
             
         $this->load->database();
 
+        // TODO: asdasdasdasd
         $query = "";
         if ($user == NULL) {
             $query = $this->db->select('name, status')
