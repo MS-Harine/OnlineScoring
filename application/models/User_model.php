@@ -2,8 +2,8 @@
 
 class User_model extends CI_Model {
 
-  public function __constructor() {
-    parent::__constructor();
+  public function __construct() {
+    parent::__construct();
     $this->load->database();
   }
 
@@ -13,7 +13,7 @@ class User_model extends CI_Model {
       return false;
 
     $password = hash("sha256", $pw);
-    if ($password != $user->password)
+    if ($password != $user['password'])
       return false;
 
     return true;
@@ -21,8 +21,8 @@ class User_model extends CI_Model {
 
   public function get_user($email) {
     $query = $this->db->get_where('profile', array('email' => $email));
-    $query = $query->result();
-    if (count($query) != 1)
+    $query = $query->result_array();
+    if (empty($query))
       return NULL;
 
     return $query[0];
@@ -33,7 +33,7 @@ class User_model extends CI_Model {
     if ($query->num_rows() != 1)
       return NULL;
 
-    return $query->result()[0];
+    return $query->result_array()[0];
   }
 
   public function set_user($data) {

@@ -2,14 +2,13 @@
 
 class Auth extends CI_Controller {
 
-  public function __constructor() {
-    parent::__constructor();
-    $this->load->database();
+  public function __construct() {
+    parent::__construct();
+    $this->load->model('user_model');
+    $this->load->library('form_validation');
   }
 
   public function login() {
-    $this->load->model('user_model');
-    $this->load->library('form_validation');
     $this->form_validation->set_rules('email', 'Email', 'required');
     $this->form_validation->set_rules('password', 'Password', 'required');
 
@@ -25,8 +24,8 @@ class Auth extends CI_Controller {
       else {
         $user = $this->user_model->get_user($this->input->post('email'));
         $data = array(
-          'email' => $user->email,
-          'nickname' => $user->nickname,
+          'email' => $user['email'],
+          'nickname' => $user['nickname'],
           'is_login' => true
         );
         $this->session->set_userdata($data);
@@ -41,8 +40,6 @@ class Auth extends CI_Controller {
   }
 
   public function signup() {
-    $this->load->model('user_model');
-    $this->load->library('form_validation');
     $this->form_validation->set_rules('email', 'Email', 'required');
     $this->form_validation->set_rules('password', 'Password', 'required');
     $this->form_validation->set_rules('nickname', 'Nickname', 'required');

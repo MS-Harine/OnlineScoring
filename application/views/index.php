@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="assets/css/index.css">
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="assets/js/index.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -63,36 +64,32 @@
 								<ul>
 									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 1</li>
 									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo Problem 2</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 3</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 4</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 5</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 6</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo Problem 7</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 8</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 9</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 10</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 11</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo Problem 12</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo Problem 13</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 14</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 15</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 16</li>
-									<li><span class="fas fa-check text-success"></span>&nbsp;&nbsp;Demo Problem 17</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 18</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 19</li>
-									<li><span class="fas fa-spinner"></span>&nbsp;&nbsp;Demo Problem 20</li>
 								</ul>
 							</div>
+							<a href="#"><button type="button" class="btn btn-outline-success">New Problem</button></a>
 						</div>
 					</div>
 				</div>
 				<div id="explain" class="col-5 mainbox">
-					<div class="mainbox_liner">
-						<div class="mainbox_title">
-							<span>Explain</span>
+					<div class="show_problem">
+						<div class="mainbox_liner">
+							<div class="mainbox_title">
+								<span>Explain</span>
+							</div>
+							<div class="mainbox_content">
+								<h3>Title</h2> <hr>
+								<p>Question content area</p>
+							</div>
 						</div>
-						<div class="mainbox_content">
-							Question content area
+					</div>
+					<div class="make_problem">
+						<div class="mainbox_liner">
+							<div class="mainbox_title">
+								<span>Explain</span>
+							</div>
+							<div class="mainbox_content">
+								Question content area
+							</div>
 						</div>
 					</div>
 				</div>
@@ -126,55 +123,21 @@
 		$(document).ready(function() {
 			if ($("#setting > span > a:nth-child(2)").text() == "Logout") {
 				// Get group list when login
-				var group_list = [];
-				$.ajax({
-					url: '/group',
-					type: 'post',
-					success: function(data) {
-						$("#group ul").html("");
-						if (data != null) {
-							for (var i = 0; i < data.length; i++) {
-								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>");
-								group_list = data;
-							}
-						}
-					}
-				});
+				set_group();
 
 				// Search group list
-				$("#group .input-group button").click(function() {
-					$.ajax({
-						url: '/group/find?word=' + $("#group .input-group input")[0].value,
-						success: function(data) {
-							$("#group ul").html("");
-							for (var i = 0; i < data.length; i++)
-								$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>");
-							
-							// Event on
-							$("#group ul > li").on('click', function() {
-								$.ajax({
-									url: '/group/join?name=' + $(this).text().trim(),
-									type: 'get',
-									error: function(e) {
-										alert("Error on join group.");
-									}
-								})
-							});
-						}
-					});
-				});
+				search_group();
 				
 				// Reset group list when erase all word in search input text
-				$("#group input").keyup(function() {
-					if ($(this).val() == "") {
-						$("#group ul").html("");
-						for (var i = 0; i < group_list.length; i++)
-							$("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + group_list[i].name + "</li>");
-
-						$("#group ul > li").off('click');
-					}
-				});
+				reset_group();
 			}
+
+			$("#problem li").click(function() {
+				$(this).siblings().removeClass('selected p_select');
+				$(this).addClass('selected p_select');
+			});
+
+			$("#problem .mainbox_content a button").hide();
 		});
 	</script>
 </html>
