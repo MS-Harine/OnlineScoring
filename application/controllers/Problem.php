@@ -5,6 +5,7 @@ class Problem extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('problem_model');
+        $this->load->model('user_model');
     }
 
     public function show($group) {
@@ -18,7 +19,6 @@ class Problem extends CI_Controller {
         if (!$this->session->userdata('is_login'))
             redirect('/auth/login');
 
-        $this->load->model('user_model');
         $this->load->model('group_model');
         $this->load->database();
         $user = $this->user_model->get_user($this->session->userdata('email'));
@@ -95,5 +95,89 @@ class Problem extends CI_Controller {
         }
         
         redirect('/');
+    }
+
+    public function enrollment($p_id) {
+        if (!$this->session->userdata('is_login'))
+            redirect('/auth/login');
+
+        $user = $this->user_model->get_user($this->session->userdata('email'));
+
+        $path = "./uploads/".$p_id."/try/".$user['id'];
+        $config['upload_path'] = $path;
+        $config['allowed_types'] = 'c';
+
+        if (!file_exists($path))
+            mkdir($path, 0777, true);
+
+        $config['file_name'] = "try".sprintf("%03d", count(scandir($path)) - 2).".c";
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload("assignment"))
+            echo $this->upload->display_errors();
+    }
+
+    public function try($p_id) {
+        if (!$this->session->userdata('is_login'))
+            redirect('/auth/login');
+        
+        $is_compile = $this->input->get('compile');
+        $user = $this->user_model->get_user($this->session->userdata('email'));
+        $max_count = count(scandir("./uploads/".$p_id."/input")) - 2;
+        
+        $path = "./uploads/".$p_id."/try/".$user['id']."/";
+        $this->load->database();
+
+        if ($is_compile == true) {
+            $file = $path."try".sprintf("%03d", count(scandir($path)) - 3).".c";
+            $file = str_replace("/", "\\", $file);
+
+            $result_msg = "";
+            $result = 0;
+            exec("echo %PATH% && gcc ".$file." -o ".str_replace('/', '\\', $path)."a.out 2>&1", $result_msg, $result);
+
+            if ($result != 0) {
+                echo 0;
+                $this->db->insert('try_log', array(
+                    'problem_id' => $p_id,
+                    'profile_id' => $user['id']
+                ));
+            }
+            else
+                echo 1;
+        }
+        else {
+            $file = $path."a.out";
+            $file = str_replace("/", "\\", $file);
+            
+            $result = array();
+            for ($i = 1; $i <= $max_count; $i++) {
+                $result_msg = "";
+                exec($file." < ./uploads/".$p_id."/input/input".$i.".txt 2>&1", $result_msg);
+                $label = file_get_contents("./uploads/".$p_id."/output/output".$i.".txt");
+
+                if (strcmp(preg_replace('/\r\n|\r|\n/','',implode('', $result_msg)), preg_replace('/\r\n|\r|\n/','',$label)) == 0) 
+                    $result[(string)$i] = 1;
+                else
+                    $result[(string)$i] = 0;
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode($result);
+            
+            if (!in_array(0, $result)) {
+                $this->db->insert('try_log', array(
+                    'problem_id' => $p_id,
+                    'profile_id' => $user['id'],
+                    'solve' => 1
+                ));
+            }
+            else {
+                $this->db->insert('try_log', array(
+                    'problem_id' => $p_id,
+                    'profile_id' => $user['id'],
+                    'solve' => 0
+                ));
+            }
+        }
     }
 }

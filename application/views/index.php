@@ -126,15 +126,17 @@
 				<div id="control" class="col-3 mainbox">
 					<div id="upload">
 						<label>&nbsp;<span class="fas fa-caret-right"></span>&nbsp;&nbsp;Upload your source code</label>
-						<div class="input-group mb-3">
-						  <div class="custom-file">
-						    <input type="file" class="custom-file-input">
-								<label class="custom-file-label">Choose File</label>
-						  </div>
-						  <div class="input-group-append">
-						    <span class="input-group-text"><span class="fas fa-upload"></span></span>
-						  </div>
-						</div>
+						<form method="post">
+							<div class="input-group mb-3">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" accept=".c" name="assignment">
+									<label class="custom-file-label">Choose File</label>
+								</div>
+								<div class="input-group-append">
+									<span class="input-group-text"><span class="fas fa-upload"></span></span>
+								</div>
+							</div>
+						</form>
 					</div>
 					<div id="result">
 						<ol>

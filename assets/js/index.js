@@ -87,10 +87,93 @@ function set_problem() {
     });
 }
 
+var index = 0;
 function get_problem() {
     $("#problem li").click(function() {
-        var object = problems[$(this).index()];
+        index = $(this).index();
+        var object = problems[index];
         $("#explain .mainbox_content h3").text(object['title']);
         $("#explain .mainbox_content p").html(object['content']);
+        upload_answer();
     });
+}
+
+function upload_answer() {
+    $("#upload .input-group-append").click(function() {
+        if ($("#upload input").val() == "") {
+            alert("Upload file!");
+        }
+        else {
+            var group_name = $("#group .selected").text().trim();
+            var data = new FormData($("#upload form")[0]);
+            $.ajax({
+                url: "/problem/enrollment/" + problems[index].id,
+                type: "post",
+                data: data,
+                success: function(data) {
+                    $("#result ol").html("");
+                    do_result();
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        }
+    });
+}
+
+var get_compile = function(p_id) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "/problem/try/" + p_id,
+            data: {"compile": true},
+            type: "get",
+            success: function(result) {
+                if (result != "1") reject("Fail to compile");
+                else resolve("Success");
+            }
+        });
+    });
+}
+
+var get_result = function(p_id) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "/problem/try/" + p_id,
+            type: "get",
+            success: function(result) {
+                console.log(result);
+                resolve(result);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR, textStatus, errorThrown);
+                reject([jqXHR, textStatus, errorThrown]);
+            }
+        });
+    });
+}
+
+function do_result() {
+    get_compile(problems[index].id)
+    .then(function () {
+        $("#result ol").append("<li>Compile : <span class='text-success'>Success</span></li>");
+        return get_result(problems[index].id);
+    }, function() {
+        $("#result ol").append("<li>Compile : <span class='text-danger'>Fail</span></li>");
+        throw new Error("Stop");
+    })
+    .then(function(result) {
+        var all = true;
+        for (var i = 1; i <= Object.keys(result).length; i++) {
+            if (result[i.toString()] == 1)
+                $("#result ol").append("<li>Run " + i + " : <span class='text-success'>Success</span></li>");
+            else {
+                $("#result ol").append("<li>Run " + i + " : <span class='text-danger'>Fail</span></li>");
+                all = false;
+            }
+        }
+        if (all == true)
+            $("#result ol").append("<li><span class='text-success'>Clear!</span></li>");
+    })
+    .catch(function(e) {});
 }
