@@ -34,7 +34,7 @@ class Group extends CI_Controller {
 
     public function find() {
         if (empty($this->input->get('word')))
-            redirect('/');
+            exit;
         
         $user = NULL;
         if ($this->session->userdata('is_login')) {
