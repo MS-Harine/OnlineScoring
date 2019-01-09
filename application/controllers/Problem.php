@@ -129,11 +129,12 @@ class Problem extends CI_Controller {
 
         if ($is_compile == true) {
             $file = $path."try".sprintf("%03d", count(scandir($path)) - 3).".c";
-            $file = str_replace("/", "\\", $file);
+            #$file = str_replace("/", "\\", $file);
 
             $result_msg = "";
             $result = 0;
-            exec("echo %PATH% && gcc ".$file." -o ".str_replace('/', '\\', $path)."a.out 2>&1", $result_msg, $result);
+            #exec("echo %PATH% && gcc ".$file." -o ".str_replace('/', '\\', $path)."a.out 2>&1", $result_msg, $result);
+            exec("echo %PATH% && gcc ".$file." -o ".$path."a.out 2>&1", $result_msg, $result);
 
             if ($result != 0) {
                 echo 0;
@@ -147,24 +148,30 @@ class Problem extends CI_Controller {
         }
         else {
             $file = $path."a.out";
-            $file = str_replace("/", "\\", $file);
+            #$file = str_replace("/", "\\", $file);
             
-            $result = array();
-            for ($i = 1; $i <= $max_count; $i++) {
-                $result_msg = "";
-                exec($file." < ./uploads/".$p_id."/input/input".$i.".txt 2>&1", $result_msg);
-                $label = file_get_contents("./uploads/".$p_id."/output/output".$i.".txt");
+            $runner = ProgramRunner($file, $p_id, $max_count);
+            $runner->start();
+            $counter = 0;
+            while($runner->isAlive()) {
+                $counter++ && sleep(1);
+                if ($counter >= 10) {
+                    $runner->kill();
+                    break;
+                }
+            }
 
-                if (strcmp(preg_replace('/\r\n|\r|\n/','',implode('', $result_msg)), preg_replace('/\r\n|\r|\n/','',$label)) == 0) 
-                    $result[(string)$i] = 1;
-                else
-                    $result[(string)$i] = 0;
+            $result = $runner->result;
+            if ($runner->result_status == 0) {
+                array_push($result, -1);
+                while(count($result) < $max_count)
+                    array_push($result, -2);
             }
             
             header('Content-Type: application/json');
             echo json_encode($result);
             
-            if (!in_array(0, $result)) {
+            if (!in_array(0, $result) && !in_array(-1, $result)) {
                 $this->db->insert('try_log', array(
                     'problem_id' => $p_id,
                     'profile_id' => $user['id'],
@@ -179,5 +186,34 @@ class Problem extends CI_Controller {
                 ));
             }
         }
+    }
+}
+
+class ProgramRunner extends Thread {
+    private $path = "";
+    private $p_id = 0;
+    private $max_count = 0;
+    
+    public $result_status = 0;
+    public $result = array();
+
+    public function __construct($filepath, $problem_id, $count) {
+        $this->path = $filepath;
+        $this->p_id = $problem_id;
+        $this->max_count = $count;
+    }
+
+    public function run() {
+        for ($i = 1; $i <= $max_count; $i++) {
+            $result_msg = "";
+            exec($path." < ./uploads/".$p_id."/input/input".$i.".txt 2>&1", $result_msg);
+            $label = file_get_contents("./uploads/".$p_id."/output/output".$i.".txt");
+
+            if (strcmp(preg_replace('/\r\n|\r|\n/','',implode('', $result_msg)), preg_replace('/\r\n|\r|\n/','',$label)) == 0) 
+                $result[(string)$i] = 1;
+            else
+                $result[(string)$i] = 0;
+        }
+        $result_status = 1;
     }
 }

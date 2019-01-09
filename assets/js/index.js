@@ -3,6 +3,7 @@ function set_group() {
         url: '/group',
         type: 'post',
         success: function(data) {
+            console.log("Set group", data);
             $("#group ul").html("");
             if (data != null) {
                 var img_class = "";
@@ -38,6 +39,7 @@ function search_group() {
         $.ajax({
             url: '/group/find?word=' + $("#group .input-group input")[0].value,
             success: function(data) {
+                console.log("Search group", data);
                 $("#group ul").html("");
                 for (var i = 0; i < data.length; i++)
                     $("#group ul").append("<li><span class='fas fa-spinner'></span>&nbsp;&nbsp;" + data[i].name + "</li>");
@@ -76,6 +78,7 @@ function set_problem() {
         url: '/problem/show/' + group_name,
         type: 'get',
         success: function(data) {
+            console.log("Set_problem", data);
             problems = data;
             $("#problem ul").html("");
             for (var i = 0; i < data.length; i++) {
@@ -129,6 +132,7 @@ var get_compile = function(p_id) {
             data: {"compile": true},
             type: "get",
             success: function(result) {
+                console.log("Get_compile", result);
                 if (result != "1") reject("Fail to compile");
                 else resolve("Success");
             }
@@ -142,7 +146,7 @@ var get_result = function(p_id) {
             url: "/problem/try/" + p_id,
             type: "get",
             success: function(result) {
-                console.log(result);
+                console.log("Get_result", result);
                 resolve(result);
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -167,6 +171,14 @@ function do_result() {
         for (var i = 1; i <= Object.keys(result).length; i++) {
             if (result[i.toString()] == 1)
                 $("#result ol").append("<li>Run " + i + " : <span class='text-success'>Success</span></li>");
+            else if (result[i.toString()] == -1){
+                $("#result ol").append("<li>Run " + i + " : <span class='text-danger'>Time Out</span></li>");
+                all = false;
+            }
+            else if (result[i.toString()] == -2){
+                $("#result ol").append("<li>Run " + i + " : <span class='text-muted'>Not Tested</span></li>");
+                all = false;
+            }
             else {
                 $("#result ol").append("<li>Run " + i + " : <span class='text-danger'>Fail</span></li>");
                 all = false;
