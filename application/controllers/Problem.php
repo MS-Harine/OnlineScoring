@@ -68,11 +68,11 @@ class Problem extends CI_Controller {
             mkdir($path, 0777, true);
 
         $config['upload_path'] = $path;
-        $config['allowed_types'] = 'txt';
+        $config['allowed_types'] = '*';
         $config['file_name'] = $filename;
         $this->upload->initialize($config);
         if (!$this->upload->do_multi_upload('inputfiles')) {
-            echo '<script>alert("Error while uploading input files!\nError: ".$this->upload->display_errors());window.location.href="/";</script>';
+            echo "<script>alert('Error while uploading input files!\nError: ".$this->upload->display_errors()."');window.location.href='/';</script>";
             exit;
         }
         
@@ -105,12 +105,13 @@ class Problem extends CI_Controller {
 
         $path = "./uploads/".$p_id."/try/".$user['id'];
         $config['upload_path'] = $path;
-        $config['allowed_types'] = 'c';
+        $config['allowed_types'] = '*';
 
         if (!file_exists($path))
             mkdir($path, 0777, true);
 
         $config['file_name'] = "try".sprintf("%03d", count(scandir($path)) - 2).".c";
+	echo $config['file_name'];
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload("assignment"))
             echo $this->upload->display_errors();
@@ -129,11 +130,12 @@ class Problem extends CI_Controller {
 
         if ($is_compile == true) {
             $file = $path."try".sprintf("%03d", count(scandir($path)) - 3).".c";
-            $file = str_replace("/", "\\", $file);
+            //$file = str_replace("/", "\\", $file);
 
             $result_msg = "";
             $result = 0;
-            exec("echo %PATH% && gcc ".$file." -o ".str_replace('/', '\\', $path)."a.out 2>&1", $result_msg, $result);
+            //exec("gcc ".$file." -o ".str_replace('/', '\\', $path)."a.out 2>&1", $result_msg, $result);
+            exec("gcc ".$file." -o ".$path."a.out 2>&1", $result_msg, $result);
 
             if ($result != 0) {
                 echo 0;
@@ -147,7 +149,7 @@ class Problem extends CI_Controller {
         }
         else {
             $file = $path."a.out";
-            $file = str_replace("/", "\\", $file);
+            //$file = str_replace("/", "\\", $file);
             
             $result = array();
             for ($i = 1; $i <= $max_count; $i++) {

@@ -111,6 +111,7 @@ function upload_answer() {
                 type: "post",
                 data: data,
                 success: function(data) {
+		    console.log("upload_answer", data);
                     $("#result ol").html("");
                     do_result();
                 },

@@ -17,7 +17,8 @@
 		<div class="container">
 			<div id="head" class="row">
 				<div id="logo" class="col">
-					<img src="assets/img/logo.png" alt="logo">
+					<!--img src="assets/img/logo.png" alt="logo"-->
+					<strong>CRA C CAMP</strong>
 				</div>
 				<div class="col">&nbsp;</div>
 				<div id="setting" class="col">
@@ -140,10 +141,10 @@
 					</div>
 					<div id="result">
 						<ol>
-							<li>Compile : <span class="text-success">Success</span></li>
+							<!--li>Compile : <span class="text-success">Success</span></li>
 							<li>Run 1 : <span class="text-success">Success</span></li>
 							<li>Run 2 : <span class="text-success">Success</span></li>
-							<li>Run 3 : <span class="text-danger">Fail</span></li>
+							<li>Run 3 : <span class="text-danger">Fail</span></li-->
 						</ol>
 					</div>
 				</div>
