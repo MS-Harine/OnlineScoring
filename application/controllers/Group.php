@@ -61,6 +61,7 @@ class Group extends CI_Controller {
                             ->like('name', $this->input->get('word'))
                             ->where('group_member.profile_id != ', $user['id'])
                         ->group_end()
+                        ->group_by('name')
                         ->get();
         }
 
