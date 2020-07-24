@@ -1,5 +1,5 @@
 # Online scoring website project
-** This project is deprecated. **
+**This project is deprecated.**
 
 C-language online scoring project.
 Project for experience CodeIgniter.
