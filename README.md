@@ -1,6 +1,8 @@
 # Online scoring website project
+*** This project is deprecated. ***
 
-This project is side-project. First, C language only.
+C-language online scoring project.
+Project for experience CodeIgniter.
 
 **Versions**
 * CodeIgniter : 3.0.6
